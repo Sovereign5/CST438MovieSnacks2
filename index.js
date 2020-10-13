@@ -28,6 +28,12 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(express.json());
 app.use(express.urlencoded());
 
+app.use(session({ secret: 'any word', cookie: { maxAge: 1000 * 60 * 5 }}));
+app.use(function(req, res, next) {
+   res.locals.isAuthenticated = req.session.authenticated; 
+   next();
+});
+
 
 app.set("view engine", "ejs");
 app.use(express.static("public")); //folder for img, css, js
@@ -82,6 +88,11 @@ async function insertToDatabase(id, name) {
 		res.send("Error " + err);
 		}
 	}
+
+function isAuthenticated(req, res, next){
+    if(!req.session.authenticated) res.redirect('/login');
+    else next();
+}
 
 
 

@@ -1,0 +1,19 @@
+Here's everything I did to set up this project thus far, so I can recreate it whenever necessary
+
+Commands:
+npm init (started node)
+npm install express (parser)
+npm install ejs (view engine)
+npm heroku (yeah gonna have to look this one up)
+npm pg (postgres for heroku)
+(probably forgetting some, but I'll add to it. Or the issues will come up)
+
+
+Make sure to create a heroku app AND database.
+package.json needs a start script added in order to run
+
+[heroku pg:psql postgresql-concentric-09360 --app cst438moviesnacks2]
+^^ this command should run in terminal when accessing the database/heroku app
+From there tables can be created, then accessed
+
+Reference this project for how to set up favorite headers and ejs as a whole. 
