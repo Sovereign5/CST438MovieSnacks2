@@ -60,11 +60,16 @@ app.post("/addToTestTable", jsonParser, function(req, res) {
 function insertToDatabase(id, name) {
 	  // note: we don't try/catch this because if connecting throws an exception
 	  // we don't need to dispose of the client (it will be undefined)
-	  const client = pool.connect()
+	  try {
+		const client = pool.connect()
 		console.log(id + " " + name);
 		let sql = 'INSERT INTO test_table (id, name) VALUES (?, ?)';
 		var params = [id, name];
 		const test = pool.query(sql, params);
+	} catch (err) {
+		console.error(err);
+		res.send("Error " + err);
+		}
 	}
 
 
