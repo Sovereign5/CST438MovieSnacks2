@@ -2,6 +2,13 @@ const express = require("express");
 // const mysql   = require("mysql");
 const app = express();
 const session = require('express-session');
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 
 app.set("view engine", "ejs");
@@ -20,6 +27,19 @@ app.get("/", async function(req, res){
     }
     res.render("home");
 });//root
+
+app.get('/db', async (req, res) => {
+    try {
+      const client = await pool.connect();
+      const result = await client.query('SELECT * FROM test_table');
+      const results = { 'results': (result) ? result.rows : null};
+      res.render('pages/db', results );
+      client.release();
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+  })
 
 // functions //
 
