@@ -11,6 +11,15 @@ const pool = new Pool({
   }
 });
 
+const config = {
+	database: 'dpudf0bnk9srb',
+	host: 'ec2-34-234-185-150.compute-1.amazonaws.com',
+	user: 'dlbibhjdnaskmf',
+	password: '2bdda475bc7b897709f772b096527497173022a53ecec7ff9d929ef92c0b295a',
+	port: '5432'
+}
+//heroku pg:psql postgresql-concentric-09360 --app cst438moviesnacks2
+
 // create application/json parser
 var jsonParser = bodyParser.json();
 
@@ -57,16 +66,18 @@ app.post("/addToTestTable", jsonParser, function(req, res) {
 });
 
 // functions //
-function insertToDatabase(id, name) {
+async function insertToDatabase(id, name) {
+	const client = await pool.connect()
 	  // note: we don't try/catch this because if connecting throws an exception
 	  // we don't need to dispose of the client (it will be undefined)
 	  try {
-		const client = pool.connect()
 		console.log(id + " " + name);
-		let sql = 'INSERT INTO test_table (id, name) VALUES (?, ?)';
-		var params = [id, name];
-		const test = pool.query(sql, params);
+		let sql = 'INSERT INTO test_table (id, name) VALUES ($1, $2)';
+		const params = [id, name];
+		const test = await client.query(sql, params);
+		await client.query('COMMIT');
 	} catch (err) {
+		await client.query('ROLLBACK');
 		console.error(err);
 		res.send("Error " + err);
 		}
