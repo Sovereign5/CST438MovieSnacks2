@@ -2,6 +2,7 @@ const express = require("express");
 // const mysql   = require("mysql");
 const app = express();
 const session = require('express-session');
+var bodyParser = require('body-parser');
 const { Pool } = require('pg');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -9,6 +10,12 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
+
+// create application/json parser
+var jsonParser = bodyParser.json();
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
 app.set("view engine", "ejs");
@@ -41,8 +48,30 @@ app.get('/db', async (req, res) => {
     }
   })
 
-// functions //
+app.post("/addToTestTable", jsonParser, async function(req, res) {
+	console.log(req.body.name);
+	insertToDatabase(req.body.id, req.body.name);
+	res.send(true);
+});
 
+// functions //
+function insertToDatabase(id, name) {
+	try {
+		const client = pool.connect();
+		return new Promise(function(resolve, reject) {
+		let sql = 'INSERT INTO test_table (id, name) VALUES (?, ?)';
+		let params = [id, name];
+		client.query(sql, params, function(err, rows, fields) {
+			if (err) throw err;
+			client.end();
+			resolve.rows();
+			});
+		});
+	} catch (err) {
+
+	}
+
+}
 
 
 //starting server

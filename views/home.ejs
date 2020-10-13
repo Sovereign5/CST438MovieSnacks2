@@ -3,8 +3,31 @@
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script>
+  	function insertToDatabase(id, name) {
+  		var itemName = $("#itemname").val();
+  		var itemID = $("itemid").val();
+  		$.ajax({
+             method: "POST",
+             url: "/addToTestTable",
+             dataType: "JSON",
+             data: { "id":id,
+                     "name":name},
+             success: function(result,status) {
+                alert(name + " has been added to your cart!");
+            }
+  		}); //ajax
+  		return false;
+  	}
+  </script>
   <div class="container">
-    
+    <form>
+  		<label for="fname">First name:</label><br>
+  		<input type="text" id="id" name="id"><br>
+  		<label for="lname">Last name:</label><br>
+  		<input type="text" id="name" name="name">
+  		<td class="align-middle"><button id="buttonID" class="btn btn-primary" onclick="insertToDatabase(document.getElementById('id').value,document.getElementById('name').value)">Send</button></td>
+</form>
   </div>
   <!-- /.container -->
 </body>
