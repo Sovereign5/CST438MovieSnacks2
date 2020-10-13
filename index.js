@@ -48,7 +48,7 @@ app.get('/db', async (req, res) => {
     }
   })
 
-app.post("/addToTestTable", jsonParser, async function(req, res) {
+app.post("/addToTestTable", jsonParser, function(req, res) {
 	console.log(req.body.name);
 	insertToDatabase(req.body.id, req.body.name);
 	res.send(true);
@@ -56,22 +56,15 @@ app.post("/addToTestTable", jsonParser, async function(req, res) {
 
 // functions //
 function insertToDatabase(id, name) {
-	try {
-		const client = pool.connect();
-		return new Promise(function(resolve, reject) {
+	  // note: we don't try/catch this because if connecting throws an exception
+	  // we don't need to dispose of the client (it will be undefined)
+	  const client = pool.connect()
+		console.log(id + " " + name);
 		let sql = 'INSERT INTO test_table (id, name) VALUES (?, ?)';
-		let params = [id, name];
-		client.query(sql, params, function(err, rows, fields) {
-			if (err) throw err;
-			client.end();
-			resolve.rows();
-			});
-		});
-	} catch (err) {
-
+		var params = [id, name];
+		const test = pool.query(sql, params);
 	}
 
-}
 
 
 //starting server
