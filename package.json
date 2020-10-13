@@ -1,7 +1,7 @@
 {
   "name": "cst438moviesnacks2",
   "version": "1.0.0",
-  "description": "Authors: Janelle Uganiza, Rogelio Rodriguez, and Christopher Garcia",
+  "description": "Authors: Christopher Garcia",
   "main": "index.js",
   "dependencies": {
     "ejs": "^3.1.5",
